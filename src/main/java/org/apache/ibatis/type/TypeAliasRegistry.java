@@ -15,24 +15,17 @@
  */
 package org.apache.ibatis.type;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.ibatis.io.ResolverUtil;
 import org.apache.ibatis.io.Resources;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.ResultSet;
+import java.util.*;
+
 /**
+ * 类型别名注册
+ *
  * @author Clinton Begin
  */
 public class TypeAliasRegistry {
@@ -40,8 +33,12 @@ public class TypeAliasRegistry {
   private final Map<String, Class<?>> typeAliases = new HashMap<>();
 
   public TypeAliasRegistry() {
+
+    // 构造函数里注册系统内置的类型别名
+
     registerAlias("string", String.class);
 
+    // 基本包装类型
     registerAlias("byte", Byte.class);
     registerAlias("long", Long.class);
     registerAlias("short", Short.class);
@@ -50,7 +47,7 @@ public class TypeAliasRegistry {
     registerAlias("double", Double.class);
     registerAlias("float", Float.class);
     registerAlias("boolean", Boolean.class);
-
+    // 基本数组包装类型
     registerAlias("byte[]", Byte[].class);
     registerAlias("long[]", Long[].class);
     registerAlias("short[]", Short[].class);
@@ -59,7 +56,7 @@ public class TypeAliasRegistry {
     registerAlias("double[]", Double[].class);
     registerAlias("float[]", Float[].class);
     registerAlias("boolean[]", Boolean[].class);
-
+    // 加个下划线，就变成了基本类型
     registerAlias("_byte", byte.class);
     registerAlias("_long", long.class);
     registerAlias("_short", short.class);
@@ -68,7 +65,7 @@ public class TypeAliasRegistry {
     registerAlias("_double", double.class);
     registerAlias("_float", float.class);
     registerAlias("_boolean", boolean.class);
-
+    // 加个下划线，就变成了基本数组类型
     registerAlias("_byte[]", byte[].class);
     registerAlias("_long[]", long[].class);
     registerAlias("_short[]", short[].class);
@@ -77,7 +74,7 @@ public class TypeAliasRegistry {
     registerAlias("_double[]", double[].class);
     registerAlias("_float[]", float[].class);
     registerAlias("_boolean[]", boolean[].class);
-
+    // 日期数字型
     registerAlias("date", Date.class);
     registerAlias("decimal", BigDecimal.class);
     registerAlias("bigdecimal", BigDecimal.class);
@@ -89,17 +86,20 @@ public class TypeAliasRegistry {
     registerAlias("bigdecimal[]", BigDecimal[].class);
     registerAlias("biginteger[]", BigInteger[].class);
     registerAlias("object[]", Object[].class);
-
+    // 集合型
     registerAlias("map", Map.class);
     registerAlias("hashmap", HashMap.class);
     registerAlias("list", List.class);
     registerAlias("arraylist", ArrayList.class);
     registerAlias("collection", Collection.class);
     registerAlias("iterator", Iterator.class);
-
+    // ResultSet型
     registerAlias("ResultSet", ResultSet.class);
   }
 
+  /**
+   * 解析类型别名
+   */
   @SuppressWarnings("unchecked")
   // throws class cast exception as well if types cannot be assigned
   public <T> Class<T> resolveAlias(String string) {
@@ -108,8 +108,13 @@ public class TypeAliasRegistry {
         return null;
       }
       // issue #748
+      // 别名不区分大大小写，因为在这里全部转换成小写在进行解析
+      // 这里转个小写也有bug？见748号bug(在google code上)
+      // https://code.google.com/p/mybatis/issues
+      // 比如如果本地语言是Turkish，那i转成大写就不是I了，而是另外一个字符（İ）。这样土耳其的机器就用不了mybatis了！这是一个很大的bug，但是基本上每个人都会犯......
       String key = string.toLowerCase(Locale.ENGLISH);
       Class<T> value;
+      // 从HashMap里找对应的键值，找到则返回类型别名对应的Class
       if (typeAliases.containsKey(key)) {
         value = (Class<T>) typeAliases.get(key);
       } else {
@@ -125,6 +130,10 @@ public class TypeAliasRegistry {
     registerAliases(packageName, Object.class);
   }
 
+
+  /**
+   * 扫描并注册包下所有继承于superType的类型别名
+   */
   public void registerAliases(String packageName, Class<?> superType) {
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);

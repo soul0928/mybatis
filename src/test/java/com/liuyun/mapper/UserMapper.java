@@ -1,7 +1,8 @@
 package com.liuyun.mapper;
 
+import com.liuyun.pojo.UserEntity;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * @ProjectName mybatis
@@ -11,8 +12,8 @@ import java.util.Map;
  * @Date 2019/9/18 15:55
  * @Version 2.1.3
  **/
-public interface UserrMapper {
+public interface UserMapper {
 
-  List<Map> queryAll();
+  List<UserEntity> queryAll();
 
 }

@@ -4,12 +4,29 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-
-
+  <!--
+      标签顺序必须为：
+      properties?
+      settings
+      typeAliases
+      typeHandlers
+      objectFactory
+      objectWrapperFactory
+      reflectorFactory
+      plugins
+      environments
+      databaseIdProvider
+      mappers
+    -->
     <!--<objectFactory type="com" >-->
         <!--<property name="" value=""></property>-->
     <!--</objectFactory>-->
     <!-- 和spring整合后 environments配置将废除 -->
+
+    <typeAliases>
+      <package name="com.liuyun"/>
+    </typeAliases>
+
     <environments default="development">
         <environment id="development">
             <!-- 使用jdbc事务管理 -->
@@ -25,11 +42,12 @@
         </environment>
     </environments>
 
+
+
     <!-- 加载mapper.xml -->
      <mappers>
-         <package name=""></package>
-         <mapper resource="mapper/DemoMapper.xml"  ></mapper>
+         <!--<package name=""></package>-->
+         <mapper resource="mapper/UserMapper.xml"  ></mapper>
      </mappers>
-
 </configuration>
 

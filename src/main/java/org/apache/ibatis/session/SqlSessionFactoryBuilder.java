@@ -1,4 +1,5 @@
 /**
+ *
  *    Copyright 2009-2019 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +16,20 @@
  */
 package org.apache.ibatis.session;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.Properties;
-
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.exceptions.ExceptionFactory;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.Properties;
+
 /**
+ *
+ * 构建SqlSessionFactory的工厂
+ *
  * Builds {@link SqlSession} instances.
  *
  * @author Clinton Begin
@@ -74,7 +78,9 @@ public class SqlSessionFactoryBuilder {
 
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
+      // 解析 mybatis-config.xml(mybatis解析xml是用的  java dom)
       XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
+      // parse(): 解析config.xml里面的节点
       return build(parser.parse());
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error building SqlSession.", e);
