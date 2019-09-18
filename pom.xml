@@ -302,24 +302,15 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
-          <argLine>${argLine} -Xmx2048m</argLine>
-          <systemProperties>
-            <property>
-              <name>derby.stream.error.file</name>
-              <value>${project.build.directory}/derby.log</value>
-            </property>
-            <property>
-              <name>derby.system.home</name>
-              <value>${project.build.directory}</value>
-            </property>
-          </systemProperties>
+          <skipTests>true</skipTests>
         </configuration>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pdf-plugin</artifactId>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -362,6 +353,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.4</version>
         <configuration>
           <excludes>
             <exclude>org.apache.ibatis.ognl.*</exclude>
