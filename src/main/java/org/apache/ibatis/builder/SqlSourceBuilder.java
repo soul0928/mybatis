@@ -41,8 +41,10 @@ public class SqlSourceBuilder extends BaseBuilder {
 
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
+    // 替换#{}中间的部分,如何替换，逻辑在ParameterMappingTokenHandler
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql = parser.parse(originalSql);
+    // 返回静态SQL源码
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
   }
 
@@ -62,13 +64,22 @@ public class SqlSourceBuilder extends BaseBuilder {
       return parameterMappings;
     }
 
+
+    /**
+     * 扫描 #{}  调用 handleToken 替换为？
+     */
     @Override
     public String handleToken(String content) {
       parameterMappings.add(buildParameterMapping(content));
       return "?";
     }
 
+    /**
+     * 构建参数映射
+     */
     private ParameterMapping buildParameterMapping(String content) {
+      // #{favouriteSection,jdbcType=VARCHAR}
+      // 先解析参数映射,就是转化成一个hashmap
       Map<String, String> propertiesMap = parseParameterMapping(content);
       String property = propertiesMap.get("property");
       Class<?> propertyType;

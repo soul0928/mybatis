@@ -156,7 +156,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       // 读取 typeAliases 标签内容
       typeAliasesElement(root.evalNode("typeAliases"));
       pluginElement(root.evalNode("plugins"));
-      // objectFactory自定义实例化对象的行为  比如说返回User 对象
+      // objectFactory 自定义实例化对象的行为  比如说返回 User 对象
       objectFactoryElement(root.evalNode("objectFactory"));
       // MateObject   方便反射操作实体类的对象
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
@@ -208,7 +208,7 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void typeAliasesElement(XNode parent) {
     if (parent != null) {
-      log.info("开始解析 mybatis-config.xml文件 configuration properties 标签内容 [ \n{}]", parent);
+      //log.info("开始解析 mybatis-config.xml文件 configuration properties 标签内容 [ \n{}]", parent);
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String typeAliasPackage = child.getStringAttribute("name");
@@ -279,7 +279,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     // 传入方式是调用构造函数时传入，public XMLConfigBuilder(Reader reader, String environment, Properties props)
 
     if (context != null) {
-      log.info("开始解析 mybatis-config.xml文件 configuration properties 标签内容 [ \n{}]", context);
+      //log.info("开始解析 mybatis-config.xml文件 configuration properties 标签内容 [ \n{}]", context);
       Properties defaults = context.getChildrenAsProperties();
       String resource = context.getStringAttribute("resource");
       String url = context.getStringAttribute("url");
@@ -425,7 +425,7 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void mapperElement(XNode parent) throws Exception {
 
     if (parent != null) {
-      log.info("开始解析 mybatis-config.xml文件 configuration mappers标签内容 [ \n{}]", parent);
+      //log.info("开始解析 mybatis-config.xml文件 configuration mappers标签内容 [ \n{}]", parent);
       // 遍历解析mappers节点
       for (XNode child : parent.getChildren()) {
         // 首先解析package节点  到底是解析注解还是解析xml
